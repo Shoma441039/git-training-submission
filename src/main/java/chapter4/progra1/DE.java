@@ -1,53 +1,57 @@
 package chapter4.progra1;
-
 import java.util.ArrayList;
-import java.util.List;
 
+
+// DEクラス（会社クラス）
 public class DE {
-    private String companyName = "BT/DE";
-    private List<Employee> employees = new ArrayList<>();
-
-    // 従業員を追加するメソッド
-    public void createEmployee(String name, String department, String language) {
-        switch (department) {
-            case "人事":
-                employees.add(new HumanResource(name));
-                break;
-            case "営業":
-                employees.add(new Sales(name));
-                break;
-            case "エンジニア":
-                employees.add(new Engineer(name, language));
-                break;
+    private final String companyName = "BT/DE"; // 会社名（固定）
+    private ArrayList<Employee> employeeList = new ArrayList<>(); // 従業員リスト
+    
+    // コンストラクタ - 部署リストの初期化
+    public DE() {
+        // 部署リストは実際には使っていないので省略
+    }
+    
+    // 従業員作成メソッド（エンジニア以外用）
+    public Employee newEmployee(String name, String department) {
+        Employee employee = new Employee(name, department);
+        employeeList.add(employee);  // 従業員を追加
+        return employee;
+    }
+    
+    // 従業員作成メソッド（エンジニア用）- オーバーロード
+    public Engineer newEngineer(String name, String department, String language) {
+        Engineer engineer = new Engineer(name, department, language);
+        employeeList.add(engineer);  // エンジニアを追加
+        return engineer;
+    }
+    
+    // 従業員情報表示
+    public void displayEmployeeList() {
+        System.out.println("【" + companyName + " 従業員一覧】");
+        if (employeeList.isEmpty()) {
+            System.out.println("従業員がいません");
+        } else {
+            for (Employee employee : employeeList) {
+                employee.displayInfo();
+            }
         }
     }
-
-    // 全従業員の情報を表示
-    public void showAllEmployees() {
-        System.out.println("会社名：" + companyName);
-        for (Employee emp : employees) {
-            emp.showInfo();
-        }
-    }
-
-    // 実行スタート
+    
     public static void main(String[] args) {
-        DE de = new DE();
+        // 会社を作る
+        DE company = new DE();
 
-        // 人事の社員を作って、面接を実行
-        HumanResource hr1 = new HumanResource("田中");
-        HumanResource hr2 = new HumanResource("鈴木");
+        // 人事部の田中を作る
+        HumanResource hr = new HumanResource("田中");
 
-        // 採用（人事経由で追加）
-        hr1.interview(de, "採用", "佐藤", "人事", "Java");
-        hr1.interview(de, "採用", "山田", "営業", "");
-        hr2.interview(de, "採用", "斎藤", "エンジニア", "Python");
+        // 田中が面接をして、エンジニアの佐藤さんを採用
+        hr.interview(company, "佐藤", "エンジニア");
 
-        // DEが直接採用（テスト用）
-        de.createEmployee("伊藤", "営業", "");
-        de.createEmployee("渡辺", "エンジニア", "C++");
+        // 田中が営業部の鈴木さんを採用
+        hr.interview(company, "鈴木", "営業");
 
-        // 全従業員の情報を表示
-        de.showAllEmployees();
+        // 従業員一覧を表示
+        company.displayEmployeeList();
     }
 }
