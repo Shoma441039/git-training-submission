@@ -13,4 +13,11 @@ public abstract class Employee {
     public void showInfo() {
         System.out.println(name + "：" + department);
     }
+    public String getName() {
+        return name;
+    }
+    
+    public String getDepartment() {
+        return department;
+    }
 }
